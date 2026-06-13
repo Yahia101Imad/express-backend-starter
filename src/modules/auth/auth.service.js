@@ -61,22 +61,3 @@ export const loginService = async (email, password) => {
     token,
   };
 };
-
-// export const loginService = async (
-//   email,
-//   password
-// ) => {
-
-//   const hashedPassword =
-//     await bcrypt.hash(password, 10);
-
-//   const token = generateToken({
-//     email,
-//   });
-
-//   return {
-//     email,
-//     hashedPassword,
-//     token,
-//   };
-// };
