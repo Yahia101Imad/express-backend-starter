@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import errorMiddleware from "./middlewares/error.middleware.js";
+import setupRoutes from "./routes/index.js";
 
 const app = express();
 
@@ -15,5 +16,7 @@ app.get("/", (req, res) => {
 });
 
 app.use(errorMiddleware);
+
+setupRoutes(app);
 
 export default app;
