@@ -21,6 +21,7 @@ export const registerService = async (name, email, password) => {
   const token = generateToken({
     id: user._id,
     email: user.email,
+    role: user.role,
   });
 
   return {

@@ -15,8 +15,8 @@ app.get("/", (req, res) => {
   });
 });
 
-app.use(errorMiddleware);
-
 setupRoutes(app);
+
+app.use(errorMiddleware);
 
 export default app;
