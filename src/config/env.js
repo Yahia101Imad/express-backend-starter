@@ -11,25 +11,16 @@ const envSchema = z.object({
   JWT_SECRET: z.string().min(10),
 
   NODE_ENV: z
-    .enum([
-      "development",
-      "production",
-      "test",
-    ])
+    .enum(["development", "production", "test"])
     .default("development"),
 });
 
-const parsedEnv =
-  envSchema.safeParse(process.env);
+const parsedEnv = envSchema.safeParse(process.env);
 
 if (!parsedEnv.success) {
-  console.error(
-    "❌ Invalid environment variables"
-  );
+  console.error("❌ Invalid environment variables");
 
-  console.error(
-    parsedEnv.error.flatten().fieldErrors
-  );
+  console.error(parsedEnv.error.flatten().fieldErrors);
 
   process.exit(1);
 }
