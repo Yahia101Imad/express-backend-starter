@@ -1,12 +1,20 @@
+import AppError from "../common/errors/AppError.js";
+
 const validate = (schema) => {
   return (req, res, next) => {
-    const result = schema.safeParse(req.body);
+    const result =
+      schema.safeParse(req.body);
 
     if (!result.success) {
-      return res.status(400).json({
-        success: false,
-        errors: result.error.issues,
-      });
+      const firstError =
+        result.error.issues[0];
+
+      return next(
+        new AppError(
+          firstError.message,
+          400
+        )
+      );
     }
 
     req.body = result.data;
