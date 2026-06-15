@@ -1,7 +1,8 @@
 import bcrypt from "bcryptjs";
-import generateToken from "../../common/auth/generateToken.js";
 import User from "../user/user.model.js";
 import AppError from "../../common/errors/AppError.js";
+import generateAccessToken from "../../common/auth/generateAccessToken.js";
+import generateRefreshToken from "../../common/auth/generateRefreshToken.js";
 
 export const registerService = async (name, email, password) => {
   const existingUser = await User.findOne({ email });
@@ -18,10 +19,14 @@ export const registerService = async (name, email, password) => {
     password: hashedPassword,
   });
 
-  const token = generateToken({
+  const accessToken = generateAccessToken({
     id: user._id,
     email: user.email,
     role: user.role,
+  });
+
+  const refreshToken = generateRefreshToken({
+    id: user._id,
   });
 
   return {
@@ -30,7 +35,8 @@ export const registerService = async (name, email, password) => {
       name: user.name,
       email: user.email,
     },
-    token,
+    accessToken,
+    refreshToken,
   };
 };
 
@@ -47,9 +53,14 @@ export const loginService = async (email, password) => {
     throw new AppError("Invalid credentials", 401);
   }
 
-  const token = generateToken({
+  const accessToken = generateAccessToken({
     id: user._id,
     email: user.email,
+    role: user.role,
+  });
+
+  const refreshToken = generateRefreshToken({
+    id: user._id,
   });
 
   return {
@@ -58,6 +69,7 @@ export const loginService = async (email, password) => {
       name: user.name,
       email: user.email,
     },
-    token,
+    accessToken,
+    refreshToken,
   };
 };
