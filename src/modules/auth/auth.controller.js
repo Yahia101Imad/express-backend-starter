@@ -1,5 +1,6 @@
 import asyncHandler from "../../utils/asyncHandler.js";
 import { loginService, registerService } from "./auth.service.js";
+import sendResponse from "../../common/utils/sendResponse.js";
 
 export const register = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
