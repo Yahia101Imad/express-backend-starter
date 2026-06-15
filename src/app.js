@@ -2,11 +2,14 @@ import express from "express";
 import cors from "cors";
 import errorMiddleware from "./middlewares/error.middleware.js";
 import setupRoutes from "./routes/index.js";
+import logger from "./config/logger.js";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+app.use(logger);
 
 app.get("/", (req, res) => {
   res.status(200).json({
