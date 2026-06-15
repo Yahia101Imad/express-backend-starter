@@ -4,6 +4,7 @@ import sendResponse from "../../common/utils/sendResponse.js";
 import generateAccessToken from "../../common/auth/generateAccessToken.js";
 import jwt from "jsonwebtoken";
 import { env } from "../../config/env.js";
+import Session from "./session.model.js";
 
 export const register = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
@@ -39,10 +40,18 @@ export const refreshToken = asyncHandler(async (req, res) => {
     });
   }
 
-  const decoded = jwt.verify(
+  const session = await Session.findOne({
     refreshToken,
-    env.JWT_REFRESH_SECRET
-  );
+  });
+
+  if (!session) {
+    return res.status(401).json({
+      success: false,
+      message: "Invalid session",
+    });
+  }
+
+  const decoded = jwt.verify(refreshToken, env.JWT_REFRESH_SECRET);
 
   const newAccessToken = generateAccessToken({
     id: decoded.id,
@@ -51,5 +60,18 @@ export const refreshToken = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     accessToken: newAccessToken,
+  });
+});
+
+export const logout = asyncHandler(async (req, res) => {
+  const { refreshToken } = req.body;
+
+  await Session.deleteOne({
+    refreshToken,
+  });
+
+  res.json({
+    success: true,
+    message: "Logged out successfully",
   });
 });

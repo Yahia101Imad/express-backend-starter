@@ -3,6 +3,7 @@ import User from "../user/user.model.js";
 import AppError from "../../common/errors/AppError.js";
 import generateAccessToken from "../../common/auth/generateAccessToken.js";
 import generateRefreshToken from "../../common/auth/generateRefreshToken.js";
+import Session from "./session.model.js";
 
 export const registerService = async (name, email, password) => {
   const existingUser = await User.findOne({ email });
@@ -27,6 +28,12 @@ export const registerService = async (name, email, password) => {
 
   const refreshToken = generateRefreshToken({
     id: user._id,
+  });
+
+  await Session.create({
+    user: user._id,
+    refreshToken,
+    expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
   });
 
   return {
@@ -61,6 +68,12 @@ export const loginService = async (email, password) => {
 
   const refreshToken = generateRefreshToken({
     id: user._id,
+  });
+
+  await Session.create({
+    user: user._id,
+    refreshToken,
+    expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
   });
 
   return {
