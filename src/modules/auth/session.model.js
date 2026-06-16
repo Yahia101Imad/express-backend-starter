@@ -17,6 +17,15 @@ const sessionSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
+    deviceInfo: {
+      type: String,
+      default: "Unknown Device",
+    },
+
+    ipAddress: {
+      type: String,
+      default: "",
+    },
   },
   { timestamps: true },
 );

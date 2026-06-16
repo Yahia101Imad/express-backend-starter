@@ -8,8 +8,11 @@ import Session from "./session.model.js";
 
 export const register = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
+  const deviceInfo = req.headers["user-agent"];
+  const ipAddress = req.ip;
 
-  const result = await registerService(name, email, password);
+  const result = await registerService(name, email, password,deviceInfo,
+  ipAddress);
 
   sendResponse(res, {
     statusCode: 201,
@@ -20,8 +23,11 @@ export const register = asyncHandler(async (req, res) => {
 
 export const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
+  const deviceInfo = req.headers["user-agent"];
+  const ipAddress = req.ip;
 
-  const result = await loginService(email, password);
+  const result = await loginService(email, password,deviceInfo,
+  ipAddress);
 
   sendResponse(res, {
     statusCode: 200,
@@ -56,12 +62,37 @@ export const refreshToken = asyncHandler(async (req, res) => {
   const newAccessToken = generateAccessToken({
     id: decoded.id,
   });
-
+  
   res.status(200).json({
     success: true,
     accessToken: newAccessToken,
   });
 });
+
+export const getSessions = asyncHandler(async (req, res) => {
+  const sessions = await Session.find({
+    user: req.user.id,
+  }).select("-refreshToken");
+
+  sendResponse(res, {
+    data: sessions,
+    message: "Sessions fetched",
+  });
+});
+
+export const revokeSession =
+  asyncHandler(async (req, res) => {
+    const { sessionId } = req.params;
+
+    await Session.deleteOne({
+      _id: sessionId,
+      user: req.user.id,
+    });
+
+    sendResponse(res, {
+      message: "Session revoked",
+    });
+  });
 
 export const logout = asyncHandler(async (req, res) => {
   const { refreshToken } = req.body;
@@ -75,3 +106,15 @@ export const logout = asyncHandler(async (req, res) => {
     message: "Logged out successfully",
   });
 });
+
+export const logoutAll =
+  asyncHandler(async (req, res) => {
+    await Session.deleteMany({
+      user: req.user.id,
+    });
+
+    sendResponse(res, {
+      message:
+        "Logged out from all devices",
+    });
+  });

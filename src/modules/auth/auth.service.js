@@ -5,7 +5,13 @@ import generateAccessToken from "../../common/auth/generateAccessToken.js";
 import generateRefreshToken from "../../common/auth/generateRefreshToken.js";
 import Session from "./session.model.js";
 
-export const registerService = async (name, email, password) => {
+export const registerService = async (
+  name,
+  email,
+  password,
+  deviceInfo,
+  ipAddress,
+) => {
   const existingUser = await User.findOne({ email });
 
   if (existingUser) {
@@ -33,6 +39,8 @@ export const registerService = async (name, email, password) => {
   await Session.create({
     user: user._id,
     refreshToken,
+    deviceInfo,
+    ipAddress,
     expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
   });
 
@@ -47,7 +55,7 @@ export const registerService = async (name, email, password) => {
   };
 };
 
-export const loginService = async (email, password) => {
+export const loginService = async (email, password, deviceInfo, ipAddress) => {
   const user = await User.findOne({ email });
 
   if (!user) {
@@ -73,6 +81,8 @@ export const loginService = async (email, password) => {
   await Session.create({
     user: user._id,
     refreshToken,
+    deviceInfo,
+    ipAddress,
     expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
   });
 
