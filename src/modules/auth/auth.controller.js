@@ -4,6 +4,7 @@ import {
   registerService,
   forgotPasswordService,
   resetPasswordService,
+  verifyEmailService,
 } from "./auth.service.js";
 import sendResponse from "../../common/utils/sendResponse.js";
 import generateAccessToken from "../../common/auth/generateAccessToken.js";
@@ -148,5 +149,15 @@ export const resetPassword = asyncHandler(async (req, res) => {
 
   sendResponse(res, {
     message: "Password reset successfully",
+  });
+});
+
+export const verifyEmail = asyncHandler(async (req, res) => {
+  const { token } = req.body;
+
+  await verifyEmailService(token);
+
+  sendResponse(res, {
+    message: "Email verified successfully",
   });
 });

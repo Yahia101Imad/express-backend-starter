@@ -6,6 +6,7 @@ import generateRefreshToken from "../../common/auth/generateRefreshToken.js";
 import Session from "./session.model.js";
 import PasswordResetToken from "./password-reset-token.model.js";
 import generateRandomToken from "../../common/utils/generateRandomToken.js";
+import EmailVerificationToken from "./email-verification-token.model.js";
 
 export const registerService = async (
   name,
@@ -46,6 +47,14 @@ export const registerService = async (
     expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
   });
 
+  const verificationToken = generateRandomToken();
+
+  await EmailVerificationToken.create({
+    user: user._id,
+    token: verificationToken,
+    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
+  });
+
   return {
     user: {
       id: user._id,
@@ -54,6 +63,7 @@ export const registerService = async (
     },
     accessToken,
     refreshToken,
+    verificationToken,
   };
 };
 
@@ -151,6 +161,32 @@ export const resetPasswordService = async (token, newPassword) => {
   // Delete all sessions, user should signin after resetting his password (for security)
   await Session.deleteMany({
     user: user._id,
+  });
+
+  return null;
+};
+
+export const verifyEmailService = async (token) => {
+  const verification = await EmailVerificationToken.findOne({
+    token,
+  });
+
+  if (!verification) {
+    throw new AppError("Invalid verification token", 400);
+  }
+
+  if (verification.expiresAt < new Date()) {
+    throw new AppError("Verification token expired", 400);
+  }
+
+  const user = await User.findById(verification.user);
+
+  user.isVerified = true;
+
+  await user.save();
+
+  await EmailVerificationToken.deleteOne({
+    _id: verification._id,
   });
 
   return null;

@@ -9,6 +9,7 @@ import {
   logoutAll,
   forgotPassword,
   resetPassword,
+  verifyEmail,
 } from "./auth.controller.js";
 import validate from "../../middlewares/validate.middleware.js";
 import { registerSchema, loginSchema } from "./validators/auth.schema.js";
@@ -33,5 +34,7 @@ router.post("/logout-all", protect, logoutAll);
 router.post("/forgot-password", forgotPassword);
 
 router.post("/reset-password", resetPassword);
+
+router.post("/verify-email", verifyEmail);
 
 export default router;
