@@ -124,3 +124,34 @@ export const forgotPasswordService = async (email) => {
     resetToken,
   };
 };
+
+export const resetPasswordService = async (token, newPassword) => {
+  const resetToken = await PasswordResetToken.findOne({
+    token,
+  });
+
+  if (!resetToken) {
+    throw new AppError("Invalid token", 400);
+  }
+
+  if (resetToken.expiresAt < new Date()) {
+    throw new AppError("Token expired", 400);
+  }
+
+  const user = await User.findById(resetToken.user);
+
+  user.password = newPassword;
+
+  await user.save();
+
+  // await PasswordResetToken.deleteOne({
+  //   _id: resetToken._id,
+  // });
+
+  // Delete all sessions, user should signin after resetting his password (for security)
+  await Session.deleteMany({
+    user: user._id,
+  });
+
+  return null;
+};
