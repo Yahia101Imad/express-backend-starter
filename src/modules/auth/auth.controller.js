@@ -1,5 +1,9 @@
 import asyncHandler from "../../utils/asyncHandler.js";
-import { loginService, registerService } from "./auth.service.js";
+import {
+  loginService,
+  registerService,
+  forgotPasswordService,
+} from "./auth.service.js";
 import sendResponse from "../../common/utils/sendResponse.js";
 import generateAccessToken from "../../common/auth/generateAccessToken.js";
 import jwt from "jsonwebtoken";
@@ -11,8 +15,13 @@ export const register = asyncHandler(async (req, res) => {
   const deviceInfo = req.headers["user-agent"];
   const ipAddress = req.ip;
 
-  const result = await registerService(name, email, password,deviceInfo,
-  ipAddress);
+  const result = await registerService(
+    name,
+    email,
+    password,
+    deviceInfo,
+    ipAddress,
+  );
 
   sendResponse(res, {
     statusCode: 201,
@@ -26,8 +35,7 @@ export const login = asyncHandler(async (req, res) => {
   const deviceInfo = req.headers["user-agent"];
   const ipAddress = req.ip;
 
-  const result = await loginService(email, password,deviceInfo,
-  ipAddress);
+  const result = await loginService(email, password, deviceInfo, ipAddress);
 
   sendResponse(res, {
     statusCode: 200,
@@ -62,7 +70,7 @@ export const refreshToken = asyncHandler(async (req, res) => {
   const newAccessToken = generateAccessToken({
     id: decoded.id,
   });
-  
+
   res.status(200).json({
     success: true,
     accessToken: newAccessToken,
@@ -80,19 +88,18 @@ export const getSessions = asyncHandler(async (req, res) => {
   });
 });
 
-export const revokeSession =
-  asyncHandler(async (req, res) => {
-    const { sessionId } = req.params;
+export const revokeSession = asyncHandler(async (req, res) => {
+  const { sessionId } = req.params;
 
-    await Session.deleteOne({
-      _id: sessionId,
-      user: req.user.id,
-    });
-
-    sendResponse(res, {
-      message: "Session revoked",
-    });
+  await Session.deleteOne({
+    _id: sessionId,
+    user: req.user.id,
   });
+
+  sendResponse(res, {
+    message: "Session revoked",
+  });
+});
 
 export const logout = asyncHandler(async (req, res) => {
   const { refreshToken } = req.body;
@@ -112,14 +119,23 @@ export const logout = asyncHandler(async (req, res) => {
 // Expired Access Tokens should be refreshed on the frontend via /refresh-token,
 // then the original request should be retried automatically.
 // This keeps logoutAll authenticated while maintaining a smooth UX.
-export const logoutAll =
-  asyncHandler(async (req, res) => {
-    await Session.deleteMany({
-      user: req.user.id,
-    });
-
-    sendResponse(res, {
-      message:
-        "Logged out from all devices",
-    });
+export const logoutAll = asyncHandler(async (req, res) => {
+  await Session.deleteMany({
+    user: req.user.id,
   });
+
+  sendResponse(res, {
+    message: "Logged out from all devices",
+  });
+});
+
+export const forgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+
+  const result = await forgotPasswordService(email);
+
+  sendResponse(res, {
+    message: "Password reset token generated",
+    data: result,
+  });
+});

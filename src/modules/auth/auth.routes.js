@@ -6,7 +6,8 @@ import {
   logout,
   getSessions,
   revokeSession,
-  logoutAll
+  logoutAll,
+  forgotPassword,
 } from "./auth.controller.js";
 import validate from "../../middlewares/validate.middleware.js";
 import { registerSchema, loginSchema } from "./validators/auth.schema.js";
@@ -28,5 +29,6 @@ router.post("/logout", protect, logout);
 
 router.post("/logout-all", protect, logoutAll);
 
+router.post("/forgot-password", forgotPassword);
 
 export default router;

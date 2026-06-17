@@ -4,6 +4,8 @@ import AppError from "../../common/errors/AppError.js";
 import generateAccessToken from "../../common/auth/generateAccessToken.js";
 import generateRefreshToken from "../../common/auth/generateRefreshToken.js";
 import Session from "./session.model.js";
+import PasswordResetToken from "./password-reset-token.model.js";
+import generateRandomToken from "../../common/utils/generateRandomToken.js";
 
 export const registerService = async (
   name,
@@ -94,5 +96,31 @@ export const loginService = async (email, password, deviceInfo, ipAddress) => {
     },
     accessToken,
     refreshToken,
+  };
+};
+
+export const forgotPasswordService = async (email) => {
+  const user = await User.findOne({
+    email,
+  });
+
+  if (!user) {
+    throw new AppError("User not found", 404);
+  }
+
+  const resetToken = generateRandomToken();
+
+  await PasswordResetToken.deleteMany({
+    user: user._id,
+  });
+
+  await PasswordResetToken.create({
+    user: user._id,
+    token: resetToken,
+    expiresAt: new Date(Date.now() + 15 * 60 * 1000),
+  });
+
+  return {
+    resetToken,
   };
 };
