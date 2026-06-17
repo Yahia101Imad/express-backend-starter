@@ -107,6 +107,11 @@ export const logout = asyncHandler(async (req, res) => {
   });
 });
 
+// NOTE:
+// logoutAll is protected by Access Token.
+// Expired Access Tokens should be refreshed on the frontend via /refresh-token,
+// then the original request should be retried automatically.
+// This keeps logoutAll authenticated while maintaining a smooth UX.
 export const logoutAll =
   asyncHandler(async (req, res) => {
     await Session.deleteMany({
