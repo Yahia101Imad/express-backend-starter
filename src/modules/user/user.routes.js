@@ -3,11 +3,10 @@ import protect from "../../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
-// router.get("/profile", protect, (req, res) => {
-//   res.json({
-//     message: "Your profile",
-//     user: req.user,
-//   });
-// });
+// TODO:
+// GET /users
+// GET /users/:id
+// PATCH /users/:id
+// DELETE /users/:id
 
 export default router;
