@@ -7,24 +7,23 @@ import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./config/swagger.js";
 import helmet from "helmet";
 import { globalLimiter } from "./middlewares/rateLimit.middleware.js";
+import { SECURITY } from "./config/security.js";
 
 const app = express();
 
 app.use(helmet());
 app.use(globalLimiter);
 app.use(cors());
-// app.use(express.json());
 app.use(
   express.json({
-    limit: "10kb",
+    limit: SECURITY.REQUEST_SIZE_LIMIT,
   }),
 );
-// app.use(express.urlencoded({ extended: true }));
 app.use(
   express.urlencoded({
     extended: true,
-    limit: "10kb",
-  })
+    limit: SECURITY.REQUEST_SIZE_LIMIT,
+  }),
 );
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));

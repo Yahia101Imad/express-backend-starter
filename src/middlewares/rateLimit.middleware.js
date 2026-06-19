@@ -1,9 +1,10 @@
 import rateLimit from "express-rate-limit";
+import { SECURITY } from "../config/security.js";
 
 export const globalLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 min
+  windowMs: SECURITY.GLOBAL_RATE_LIMIT.WINDOW_MS,
 
-  max: 100,
+  max: SECURITY.GLOBAL_RATE_LIMIT.MAX_REQUESTS,
 
   standardHeaders: true,
 
@@ -16,9 +17,9 @@ export const globalLimiter = rateLimit({
 });
 
 export const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
+  windowMs: SECURITY.AUTH_RATE_LIMIT.WINDOW_MS,
 
-  max: 5,
+  max: SECURITY.AUTH_RATE_LIMIT.MAX_REQUESTS,
 
   standardHeaders: true,
 

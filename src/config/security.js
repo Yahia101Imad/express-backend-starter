@@ -1,0 +1,12 @@
+export const SECURITY = {
+  GLOBAL_RATE_LIMIT: {
+    WINDOW_MS: 15 * 60 * 1000,
+    MAX_REQUESTS: 100,
+  },
+
+  AUTH_RATE_LIMIT: {
+    WINDOW_MS: 15 * 60 * 1000,
+    MAX_REQUESTS: 5,
+  },
+  REQUEST_SIZE_LIMIT: "10kb",
+};
