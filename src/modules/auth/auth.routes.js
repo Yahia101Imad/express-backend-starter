@@ -14,6 +14,7 @@ import {
 import validate from "../../middlewares/validate.middleware.js";
 import { registerSchema, loginSchema } from "./validators/auth.schema.js";
 import protect from "../../middlewares/auth.middleware.js";
+import { authLimiter } from "../../middlewares/rateLimit.middleware.js";
 
 const router = express.Router();
 
@@ -34,7 +35,7 @@ const router = express.Router();
  *       201:
  *         description: User registered successfully
  */
-router.post("/register", validate(registerSchema), register);
+router.post("/register", authLimiter, validate(registerSchema), register);
 
 /**
  * @openapi
@@ -53,7 +54,7 @@ router.post("/register", validate(registerSchema), register);
  *       200:
  *         description: Login successful
  */
-router.post("/login", validate(loginSchema), login);
+router.post("/login", authLimiter, validate(loginSchema), login);
 
 /**
  * @openapi
@@ -153,7 +154,7 @@ router.post("/logout-all", protect, logoutAll);
  *       200:
  *         description: Password reset email sent if account exists
  */
-router.post("/forgot-password", forgotPassword);
+router.post("/forgot-password", authLimiter, forgotPassword);
 
 /**
  * @openapi
@@ -166,7 +167,7 @@ router.post("/forgot-password", forgotPassword);
  *       200:
  *         description: Password reset successfully
  */
-router.post("/reset-password", resetPassword);
+router.post("/reset-password", authLimiter, resetPassword);
 
 /**
  * @openapi
@@ -179,6 +180,6 @@ router.post("/reset-password", resetPassword);
  *       200:
  *         description: Email verified successfully
  */
-router.post("/verify-email", verifyEmail);
+router.post("/verify-email", authLimiter, verifyEmail);
 
 export default router;

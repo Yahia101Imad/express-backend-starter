@@ -11,7 +11,21 @@ export const globalLimiter = rateLimit({
 
   message: {
     success: false,
-    message:
-      "Too many requests, please try again later.",
+    message: "Too many requests, please try again later.",
+  },
+});
+
+export const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+
+  max: 5,
+
+  standardHeaders: true,
+
+  legacyHeaders: false,
+
+  message: {
+    success: false,
+    message: "Too many authentication attempts. Please try again later.",
   },
 });
