@@ -5,11 +5,14 @@ import setupRoutes from "./routes/index.js";
 import logger from "./config/logger.js";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./config/swagger.js";
+import helmet from "helmet";
 
 const app = express();
 
+app.use(helmet());
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
