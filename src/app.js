@@ -13,7 +13,12 @@ const app = express();
 
 app.use(helmet());
 app.use(globalLimiter);
-app.use(cors());
+app.use(
+  cors({
+    origin: env.CLIENT_URL,
+    credentials: true,
+  })
+);
 app.use(
   express.json({
     limit: SECURITY.REQUEST_SIZE_LIMIT,

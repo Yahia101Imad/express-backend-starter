@@ -4,13 +4,9 @@ A production-ready backend boilerplate built with Node.js, Express, MongoDB, JWT
 
 Designed for SaaS applications, dashboards, and scalable APIs.
 
-
-
 ## 💡 Why this project?
 
 This starter helps developers ship scalable SaaS backends faster by removing the need to rebuild authentication, authorization, and core architecture in every project.
-
-
 
 ## ✨ Features
 
@@ -26,8 +22,6 @@ This starter helps developers ship scalable SaaS backends faster by removing the
 - 📘 Swagger API documentation
 - ⚡ Clean error handling
 
-
-
 ## 🛠 Tech Stack
 
 - Node.js
@@ -35,8 +29,6 @@ This starter helps developers ship scalable SaaS backends faster by removing the
 - MongoDB + Mongoose
 - JWT
 - Swagger (OpenAPI)
-
-
 
 ## 📁 Project Structure
 
@@ -51,8 +43,6 @@ src/
  ├── app.js
  └── server.js
 
-
-
 ## 🚀 Installation
 
 ```bash
@@ -61,8 +51,6 @@ cd express-backend-starter
 npm install
 npm run dev
 ```
-
-
 
 ## ⚙️ Environment Variables
 
@@ -79,15 +67,12 @@ JWT_REFRESH_EXPIRES_IN=30d
 ADMIN_NAME=adminName
 ADMIN_EMAIL=adminEmail
 ADMIN_PASSWORD=adminPassword
+CLIENT_URL=http://localhost:your-frontend-port
 ```
-
-
 
 ## 🌱 Seed admin (recommended for development)
 
 ``npm run seed:admin``
-
-
 
 ## 📘 API Documentation
 
