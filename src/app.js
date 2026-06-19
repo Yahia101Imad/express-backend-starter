@@ -6,10 +6,12 @@ import logger from "./config/logger.js";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./config/swagger.js";
 import helmet from "helmet";
+import { globalLimiter } from "./middlewares/rateLimit.middleware.js";
 
 const app = express();
 
 app.use(helmet());
+app.use(globalLimiter);
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
