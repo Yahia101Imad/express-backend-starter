@@ -68,7 +68,10 @@ export const registerService = async (
 };
 
 export const loginService = async (email, password, deviceInfo, ipAddress) => {
-  const user = await User.findOne({ email });
+  const user = await User.findOne({
+    email,
+    isDeleted: false,
+  });
 
   if (!user) {
     throw new AppError("Invalid credentials", 401);

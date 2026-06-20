@@ -1,13 +1,14 @@
 import express from "express";
 import protect from "../../middlewares/auth.middleware.js";
-import { getMe, updateMe } from "./me.controller.js";
+import { getMe, updateMe, deleteMe } from "./me.controller.js";
 
 const router = express.Router();
 
 router.get("/", protect, getMe);
-// TODO:
 router.patch("/", protect, updateMe);
-// DELETE /me
+router.delete("/", protect, deleteMe);
+
+// TODO:
 // GET /me/sessions
 // GET /me/activity
 

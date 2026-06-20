@@ -18,3 +18,16 @@ export const updateMeService = async (userId, updateData) => {
 
   return user;
 };
+
+export const deleteMeService = async (userId) => {
+  return await User.findByIdAndUpdate(
+    userId,
+    {
+      isDeleted: true,
+      deletedAt: new Date(),
+    },
+    {
+      new: true,
+    },
+  );
+};
