@@ -8,6 +8,7 @@ import swaggerSpec from "./config/swagger.js";
 import helmet from "helmet";
 import { globalLimiter } from "./middlewares/rateLimit.middleware.js";
 import { SECURITY } from "./config/security.js";
+import { env } from "process";
 
 const app = express();
 
@@ -17,7 +18,7 @@ app.use(
   cors({
     origin: env.CLIENT_URL,
     credentials: true,
-  })
+  }),
 );
 app.use(
   express.json({
