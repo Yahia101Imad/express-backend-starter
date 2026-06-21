@@ -1,6 +1,24 @@
+import { getUsersService } from "./user.service.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 import User from "../user/user.model.js";
-import { updateMeService, deleteMeService } from "./me.service.js";
+import { updateMeService, deleteMeService } from "./user.service.js";
+
+export const getDashboard = async (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "Admin dashboard",
+  });
+};
+
+export const getUsers = asyncHandler(async (req, res) => {
+  const users = await getUsersService();
+
+  res.status(200).json({
+    success: true,
+    count: users.length,
+    data: users,
+  });
+});
 
 export const getMe = asyncHandler(async (req, res) => {
   // const user = await User.findById(req.user.id).select("name email role createdAt");
