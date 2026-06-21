@@ -42,3 +42,15 @@ export const getUsersService =
       },
     );
   };
+
+  export const getUserByIdService =
+  async (id) => {
+
+    const user =
+      await User.findOne({
+        _id: id,
+        isDeleted: false,
+      }).select("-password");
+
+    return user;
+  };

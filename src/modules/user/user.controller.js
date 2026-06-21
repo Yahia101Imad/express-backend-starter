@@ -4,6 +4,7 @@ import {
   getUsersService,
   updateMeService,
   deleteMeService,
+  getUserByIdService
 } from "./user.service.js";
 
 export const getDashboard = async (req, res) => {
@@ -54,3 +55,25 @@ export const deleteMe = asyncHandler(async (req, res) => {
     message: "Account deleted successfully",
   });
 });
+
+export const getUserById =
+  asyncHandler(async (req, res) => {
+
+    const user =
+      await getUserByIdService(
+        req.params.id
+      );
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message:
+          "User not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: user,
+    });
+  });
