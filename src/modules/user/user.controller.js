@@ -1,7 +1,10 @@
-import { getUsersService } from "./user.service.js";
 import asyncHandler from "../../utils/asyncHandler.js";
 import User from "../user/user.model.js";
-import { updateMeService, deleteMeService } from "./user.service.js";
+import {
+  getUsersService,
+  updateMeService,
+  deleteMeService,
+} from "./user.service.js";
 
 export const getDashboard = async (req, res) => {
   res.status(200).json({
