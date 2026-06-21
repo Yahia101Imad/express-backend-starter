@@ -6,7 +6,7 @@ import {
   deleteMeService,
   getUserByIdService,
   updateUserService,
-  deleteUserService
+  deleteUserService,
 } from "./user.service.js";
 
 export const getDashboard = async (req, res) => {
@@ -17,17 +17,24 @@ export const getDashboard = async (req, res) => {
 };
 
 export const getUsers = asyncHandler(async (req, res) => {
-  const users = await getUsersService();
+  const result = await getUsersService(req.query);
 
   res.status(200).json({
     success: true,
-    count: users.length,
-    data: users,
+
+    page: result.page,
+
+    limit: result.limit,
+
+    total: result.total,
+
+    totalPages: result.totalPages,
+
+    data: result.users,
   });
 });
 
 export const getMe = asyncHandler(async (req, res) => {
-  // const user = await User.findById(req.user.id).select("name email role createdAt");
   User.findOne({
     _id: userId,
     isDeleted: false,
@@ -58,74 +65,53 @@ export const deleteMe = asyncHandler(async (req, res) => {
   });
 });
 
-export const getUserById =
-  asyncHandler(async (req, res) => {
+export const getUserById = asyncHandler(async (req, res) => {
+  const user = await getUserByIdService(req.params.id);
 
-    const user =
-      await getUserByIdService(
-        req.params.id
-      );
-
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message:
-          "User not found",
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      data: user,
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: "User not found",
     });
+  }
+
+  res.status(200).json({
+    success: true,
+    data: user,
   });
+});
 
-  // TODO: admin can update everything "req.body" even "role" so:
-  // don't allow to edit role field
-  export const updateUser =
-  asyncHandler(async (req, res) => {
+// TODO: admin can update everything "req.body" even "role" so:
+// don't allow to edit role field
+export const updateUser = asyncHandler(async (req, res) => {
+  const user = await updateUserService(req.params.id, req.body);
 
-    const user =
-      await updateUserService(
-        req.params.id,
-        req.body
-      );
-
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message:
-          "User not found",
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      message:
-        "User updated successfully",
-      data: user,
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: "User not found",
     });
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "User updated successfully",
+    data: user,
   });
+});
 
-  export const deleteUser =
-  asyncHandler(async (req, res) => {
+export const deleteUser = asyncHandler(async (req, res) => {
+  const user = await deleteUserService(req.params.id);
 
-    const user =
-      await deleteUserService(
-        req.params.id
-      );
-
-    if (!user) {
-      return res.status(404).json({
-        success: false,
-        message:
-          "User not found",
-      });
-    }
-
-    res.status(200).json({
-      success: true,
-      message:
-        "User deleted successfully",
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: "User not found",
     });
+  }
+
+  res.status(200).json({
+    success: true,
+    message: "User deleted successfully",
   });
+});
