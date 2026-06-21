@@ -70,3 +70,21 @@ export const getUsersService =
 
     return user;
   };
+
+  export const deleteUserService =
+  async (userId) => {
+
+    const user =
+      await User.findByIdAndUpdate(
+        userId,
+        {
+          isDeleted: true,
+          deletedAt: new Date(),
+        },
+        {
+          new: true,
+        }
+      );
+
+    return user;
+  };

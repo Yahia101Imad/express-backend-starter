@@ -3,7 +3,7 @@ import { getDashboard } from "./user.controller.js";
 import protect from "../../middlewares/auth.middleware.js";
 import allowPermissions from "../../middlewares/permission.middleware.js";
 import { PERMISSIONS } from "../../common/constants/permissions.js";
-import { getMe, updateMe, deleteMe, getUsers, getUserById, updateUser } from "./user.controller.js";
+import { getMe, updateMe, deleteMe, getUsers, getUserById, updateUser, deleteUser } from "./user.controller.js";
 
 const router = express.Router();
 
@@ -36,6 +36,12 @@ router.patch(
   ),
   updateUser
 );
-// DELETE /users/:id
-
+router.delete(
+  "/:id",
+  protect,
+  allowPermissions(
+    PERMISSIONS.USER_DELETE
+  ),
+  deleteUser
+);
 export default router;

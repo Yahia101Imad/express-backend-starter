@@ -5,7 +5,8 @@ import {
   updateMeService,
   deleteMeService,
   getUserByIdService,
-  updateUserService
+  updateUserService,
+  deleteUserService
 } from "./user.service.js";
 
 export const getDashboard = async (req, res) => {
@@ -103,5 +104,28 @@ export const getUserById =
       message:
         "User updated successfully",
       data: user,
+    });
+  });
+
+  export const deleteUser =
+  asyncHandler(async (req, res) => {
+
+    const user =
+      await deleteUserService(
+        req.params.id
+      );
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message:
+          "User not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message:
+        "User deleted successfully",
     });
   });
