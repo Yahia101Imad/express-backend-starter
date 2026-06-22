@@ -4,16 +4,36 @@ import getPagination from "../../utils/pagination.js";
 export const getUsersService = async (query) => {
   const { page, limit, skip } = getPagination(query);
 
-  const users = await User.find({
+  const filter = {
     isDeleted: false,
-  })
+  };
+
+  if (query.role) {
+    filter.role = query.role;
+  }
+
+  if (query.name) {
+    filter.name = {
+      $regex: query.name,
+      $options: "i",
+    };
+  }
+
+  let sort = {
+    createdAt: -1,
+  };
+
+  if (query.sort) {
+    sort = query.sort;
+  }
+
+  const users = await User.find(filter)
+    .sort(sort)
     .skip(skip)
     .limit(limit)
     .select("-password");
 
-  const total = await User.countDocuments({
-    isDeleted: false,
-  });
+  const total = await User.countDocuments(filter);
 
   return {
     users,

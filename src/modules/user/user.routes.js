@@ -26,7 +26,7 @@ router.get("/me", protect, getMe);
 router.patch("/me", protect, updateMe);
 router.delete("/me", protect, deleteMe);
 
-router.get("/", protect, getUsers);
+router.get("/", protect, allowPermissions(PERMISSIONS.USER_READ), getUsers);
 router.get(
   "/:id",
   protect,
