@@ -18,7 +18,7 @@ This starter helps developers ship scalable SaaS backends faster by removing the
 - 🚪 Logout / Logout all devices
 - 🔒 Password reset flow
 - 📧 Email verification system
-- 📊 Pagination & filtering (in progress)
+- 📊 Pagination, filtering & sorting
 - 📘 Swagger API documentation
 - ⚡ Clean error handling
 
